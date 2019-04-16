@@ -7,10 +7,9 @@
 #include "motor_driver.h"
 
 /**
- * @brief SOL_1 controls solenoids, MOTOR_1 controls deployment motor
+ * @brief SOL_1 controls solenoids
  */
 const byte SOL_1 = 8;
-const byte MOTOR_1 = 10;
 
 motor_driver motor;
 xbee xb;
@@ -22,7 +21,7 @@ void setup() {
   Serial.println("NSL 18-19 Deployment Test\n");
 
   pinMode(SOL_1, OUTPUT);
-  pinMode(MOTOR_1, OUTPUT);
+  digitalWrite(SOL_1, HIGH);
 }
 
 
@@ -50,13 +49,32 @@ void menu(char c) {
       Serial.print("MOTOR REVERSE\n ");
       motor.setSpeedPercent(-100,-100);
       break;
-    case ' ':
-      Serial.print("STOP");
+    case 's':
+      Serial.print("STOP\n");
+      motor.setSpeedPercent(0,0);
+      break;
+    case '+':
+      digitalWrite(SOL_1, LOW);
+      delay(1000);
+      motor.setSpeedPercent(100,100);
+      delay(1000);
+      digitalWrite(SOL_1, HIGH);
+      delay(10*1000);
+      motor.setSpeedPercent(0,0);
+      break;
+    case '-':
+      digitalWrite(SOL_1, LOW);
+      delay(1000);
+      motor.setSpeedPercent(-100,-100);
+      delay(1000);
+      digitalWrite(SOL_1, HIGH);
+      delay(10*1000);
       motor.setSpeedPercent(0,0);
       break;
   }
 }
-
+  
+  
 /**
  * @brief Automatically loops while Arduino is running.
  *
