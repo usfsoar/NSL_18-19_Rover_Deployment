@@ -7,9 +7,10 @@
 #include "motor_driver.h"
 
 /**
- * @brief SOL_1 controls solenoids
+ * @brief SOL_1 controls solenoids, MOTOR_1 controls deployment motor
  */
 const byte SOL_1 = 8;
+//const byte MOTOR_1 = 10;
 
 motor_driver motor;
 xbee xb;
@@ -18,9 +19,10 @@ xbee xb;
  */
 void setup() {
   Serial.begin(9600);
-  Serial.println("NSL 18-19 Deployment Test\n");
+//  Serial.println("NSL 18-19 Deployment Test\n");
 
   pinMode(SOL_1, OUTPUT);
+  //pinMode(MOTOR_1, OUTPUT);
   digitalWrite(SOL_1, HIGH);
 }
 
@@ -32,49 +34,43 @@ void setup() {
  */
 void menu(char c) {
   switch (c) {
-    case '7':
-      Serial.print("SOL ON LOW\n");
-      digitalWrite(SOL_1, LOW);
-      break;
-    case '8':
-      Serial.print("SOL ON HIGH\n");
-      digitalWrite(SOL_1, HIGH);
-      break;
-    case '9':
-      delay(500);
-      Serial.print("MOTOR FORWARD\n");
-      motor.setSpeedPercent(100,100);
-      break;
-    case '0':
-      Serial.print("MOTOR REVERSE\n ");
-      motor.setSpeedPercent(-100,-100);
-      break;
-    case 's':
-      Serial.print("STOP\n");
-      motor.setSpeedPercent(0,0);
-      break;
     case '+':
+      Serial.print("1");
       digitalWrite(SOL_1, LOW);
-      delay(1000);
+      delay(1000*10);
       motor.setSpeedPercent(100,100);
-      delay(1000);
+      Serial.print("2");
+      delay(3*1000);
       digitalWrite(SOL_1, HIGH);
-      delay(10*1000);
+      delay(1000*22); //25 sec
       motor.setSpeedPercent(0,0);
+      Serial.print("3");
+      delay(1000*15); // 15 sec
+      Serial.print("4");
+      Serial.print("+");
       break;
     case '-':
-      digitalWrite(SOL_1, LOW);
-      delay(1000);
-      motor.setSpeedPercent(-100,-100);
-      delay(1000);
+      //Serial.print("STOP");
       digitalWrite(SOL_1, HIGH);
-      delay(10*1000);
       motor.setSpeedPercent(0,0);
+      break;
+    case 'a':
+      //Serial.print("STOP");
+      digitalWrite(SOL_1, LOW);
+      break;
+    case 's':
+      motor.setSpeedPercent(0,0);
+     // Serial.print(" ");
+      break;
+    case ',':
+      motor.setSpeedPercent(-100, -100);
+      break;
+    case '.':
+      motor.setSpeedPercent(100, 100);
       break;
   }
 }
-  
-  
+
 /**
  * @brief Automatically loops while Arduino is running.
  *
